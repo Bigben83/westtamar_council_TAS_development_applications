@@ -85,7 +85,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   begin
     date_received = Date.parse(date_received_raw).strftime('%Y-%m-%d')
   rescue ArgumentError
-    date_received = 'Invalid Date Format'
+    date_received = 'Invalid'
   end
 
   # Extract the link to the detailed page
@@ -97,6 +97,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   logger.info("Description: #{description}")
   logger.info("Address: #{address}")
   logger.info("Closing Date: #{on_notice_to}")
+  logger.info("Closing Date: #{date_received_raw}")
   logger.info("View Details Link: #{application_url}")
   logger.info("-----------------------------------")
 
