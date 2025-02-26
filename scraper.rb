@@ -69,9 +69,11 @@ doc.css('.edn_article').each_with_index do |item, index|
   # Extract the applicant (from the applicant subtitle)
   applicant = item.at_css('.edn_articleTitle.edn_articleSubTitle') ? item.at_css('.edn_articleTitle.edn_articleSubTitle').text.sub('APPLICANT:', '').strip : 'NA'
 
-  # Extract the description (text after 'PROPOSAL:' until the next <br>)
-  description_raw = item.at_css("strong:contains('PROPOSAL:')")
-  description = description_raw.next_element.text.strip if description_raw && description_raw.next_element
+  description_raw = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip : 'NA'
+  # Clean up the description and extract the text after "PROPOSAL:"
+  description = description_raw.sub(/.*PROPOSAL:/i, '').strip
+  # Further clean up to remove any additional unwanted text (if necessary)
+  description = description.split('LOCATION:').first.strip
 
   # Extract the location (from the article summary)
   address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'NA'
