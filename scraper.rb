@@ -64,19 +64,29 @@ logger.info("Start Extraction of Data")
 # Loop through all the planning application items on the main page
 doc.css('.edn_article').each_with_index do |item, index|
   # Extract the council reference (PA NO)
-  council_reference = item.at_css('.edn_articleTitle a') ? item.at_css('.edn_articleTitle a').text.strip.sub('PA NO:', '').strip : 'Council Reference not found'
+  council_reference = item.at_css('.edn_articleTitle a') ? item.at_css('.edn_articleTitle a').text.strip.sub('PA NO:', '').strip : 'NA'
 
   # Extract the applicant (from the applicant subtitle)
-  applicant = item.at_css('.edn_articleTitle.edn_articleSubTitle') ? item.at_css('.edn_articleTitle.edn_articleSubTitle').text.sub('APPLICANT:', '').strip : 'Applicant not found'
+  applicant = item.at_css('.edn_articleTitle.edn_articleSubTitle') ? item.at_css('.edn_articleTitle.edn_articleSubTitle').text.sub('APPLICANT:', '').strip : 'NA'
 
   # Extract the description (from the article summary)
-  description = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'Description not found'
+  description = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'NA'
 
   # Extract the location (from the article summary)
-  address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'Location not found'
+  address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'NA'
 
   # Extract the closing date (from the article summary)
-  on_notice_to = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('CLOSES:').last.strip : 'Closing Date not found'
+  on_notice_to = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('CLOSES:').last.strip : 'NA'
+
+  # Extract the date received from the <time> element
+  date_received_raw = item.at_css('time') ? item.at_css('time').text.strip : 'Date not found'
+  
+  # Convert the extracted date to the desired format (YYYY-mm-dd)
+  begin
+    date_received = Date.parse(date_received_raw).strftime('%Y-%m-%d')
+  rescue ArgumentError
+    date_received = 'Invalid Date Format'
+  end
 
   # Extract the link to the detailed page
   application_url = item.at_css('.edn_articleTitle a')['href'] if item.at_css('.edn_articleTitle a')
@@ -96,9 +106,9 @@ doc.css('.edn_article').each_with_index do |item, index|
   if existing_entry.empty?  # Only insert if the entry doesn't already exist
     # Save data to the database
     db.execute("INSERT INTO westtamar 
-      (council_reference, applicant, description, address, on_notice_to, date_scraped) 
-      VALUES (?, ?, ?, ?, ?, ?)",
-      [council_reference, applicant, description, address, on_notice_to, date_scraped])
+      (council_reference, applicant, description, address, date_received on_notice_to, date_scraped) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [council_reference, applicant, description, address, date_received, on_notice_to, date_scraped])
 
     logger.info("Data for #{council_reference} saved to database.")
   else
