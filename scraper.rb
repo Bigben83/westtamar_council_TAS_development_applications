@@ -71,10 +71,11 @@ doc.css('.edn_article').each_with_index do |item, index|
 
   # Extract the description from the raw HTML
   description_raw = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip : 'NA'
-  # Remove everything before and including "PROPOSAL:"
+  # Remove everything before and including "PROPOSAL:", ensuring we capture only the proposal
   description = description_raw.sub(/.*PROPOSAL:\s*/i, '').strip
-  # Remove everything after "LOCATION:" to ensure only the proposal text remains
+  # Remove everything after "LOCATION:", ensuring we capture only the proposal description
   description = description.split('LOCATION:').first.strip
+
 
   # Extract the location (from the article summary)
   address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'NA'
