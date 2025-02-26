@@ -73,6 +73,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   description_raw = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'NA'
   description = description_raw.split('LOCATION:').first.strip
 
+
   # Extract the location (from the article summary)
   address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'NA'
 
