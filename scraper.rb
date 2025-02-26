@@ -70,12 +70,8 @@ doc.css('.edn_article').each_with_index do |item, index|
   applicant = item.at_css('.edn_articleTitle.edn_articleSubTitle') ? item.at_css('.edn_articleTitle.edn_articleSubTitle').text.sub('APPLICANT:', '').strip : 'NA'
 
   # Extract the description (from the article summary)
-  # description = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'NA'
-  # Extract the description (from the article summary)
-  description_cleaned = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'NA'
-
-  # Clean up the description to remove unnecessary metadata
-  description_cleaned = description_cleaned.split("LOCATION:").first.strip
+  description_clean = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'NA'
+  description_cleaned = description_clean.split("LOCATION:").first.strip
   description = description_cleaned.split("CLOSES:").first.strip
 
   # Extract the location (from the article summary)
