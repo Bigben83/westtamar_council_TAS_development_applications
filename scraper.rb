@@ -99,6 +99,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   # Log the extracted data
   logger.info("Council Reference: #{council_reference}")
   logger.info("Applicant: #{applicant}")
+  logger.info("Description: #{description_raw}")
   logger.info("Description: #{description}")
   logger.info("Address: #{address}")
   logger.info("Closing Date: #{on_notice_to}")
