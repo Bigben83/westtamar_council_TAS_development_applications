@@ -69,21 +69,24 @@ doc.css('.edn_article').each_with_index do |item, index|
   # Extract the applicant (from the applicant subtitle)
   applicant = item.at_css('.edn_articleTitle.edn_articleSubTitle') ? item.at_css('.edn_articleTitle.edn_articleSubTitle').text.sub('APPLICANT:', '').strip : 'NA'
 
-  # Extract the description (from the article summary)
-  description_clean = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'NA'
-  description_cleaned = description_clean.split("LOCATION:").first.strip
-  description = description_cleaned.split("CLOSES:").first.strip
+  # Extract the description, which is the proposal part of the text
+  description_raw = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'NA'
+  description = description_raw.split('LOCATION:').first.strip
 
   # Extract the location (from the article summary)
   address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'NA'
 
-  # Extract the closing date (from the article summary)
-  on_notice_to = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('CLOSES:').last.strip : 'NA'
+  # Extract the closing date from the article summary
+  on_notice_to_raw = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('CLOSES:').last.strip : 'NA'
+  on_notice_to_date = on_notice_to_raw.sub(/\D*\d{1,2}(\w+)\s*(\d{1,2}\w{2})\s*(\d{4})/, '\2 \1 \3') 
+  begin
+    on_notice_to = Date.parse(on_notice_to_date).strftime('%Y-%m-%d')
+  rescue ArgumentError
+    on_notice_to = 'Invalid'
+  end
 
   # Extract the date received from the <time> element
   date_received_raw = item.at_css('time') ? item.at_css('time').text.strip : 'Date not found'
-  
-  # Convert the extracted date to the desired format (YYYY-mm-dd)
   begin
     date_received = Date.parse(date_received_raw).strftime('%Y-%m-%d')
   rescue ArgumentError
