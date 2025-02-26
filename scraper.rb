@@ -70,9 +70,8 @@ doc.css('.edn_article').each_with_index do |item, index|
   applicant = item.at_css('.edn_articleTitle.edn_articleSubTitle') ? item.at_css('.edn_articleTitle.edn_articleSubTitle').text.sub('APPLICANT:', '').strip : 'NA'
 
   # Extract the description (text after 'PROPOSAL:' until the next <br>)
-  #description = item.at_xpath(".//strong[contains(text(), 'PROPOSAL:')]/following-sibling::br[1]/preceding-sibling::text()").to_s.strip
-  # Extract the description text after the 'PROPOSAL:' label and before the next <br> tag
-  description = item.at_css("strong:contains('PROPOSAL:')")&.next_element&.text.strip
+  description_raw = item.at_css("strong:contains('PROPOSAL:')")
+  description = description_raw.next_element.text.strip if description_raw && description_raw.next_element
 
   # Extract the location (from the article summary)
   address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'NA'
