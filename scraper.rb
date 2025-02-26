@@ -71,10 +71,8 @@ doc.css('.edn_article').each_with_index do |item, index|
 
   # Extract the description and clean it by removing everything before "PROPOSAL:"
   description_raw = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip : 'NA'
-
   # Remove everything before and including "PROPOSAL:"
   description = description_raw.sub(/.*PROPOSAL:/i, '').strip
-
   # Further clean up to remove any unwanted text after "LOCATION:"
   description = description.split('LOCATION:').first.strip
 
@@ -104,7 +102,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   # Log the extracted data
   logger.info("Council Reference: #{council_reference}")
   logger.info("Applicant: #{applicant}")
-  logger.info("Description: #{description_raw}")
+  logger.info("Description RAW: #{description_raw}")
   logger.info("Description: #{description}")
   logger.info("Address: #{address}")
   logger.info("Closing Date: #{on_notice_to}")
