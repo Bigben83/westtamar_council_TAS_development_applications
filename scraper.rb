@@ -86,7 +86,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   logger.info("Applicant: #{applicant}")
   logger.info("Description: #{description}")
   logger.info("Address: #{address}")
-  logger.info("Closing Date: #{closing_date}")
+  logger.info("Closing Date: #{on_notice_to}")
   logger.info("View Details Link: #{application_url}")
   logger.info("-----------------------------------")
 
