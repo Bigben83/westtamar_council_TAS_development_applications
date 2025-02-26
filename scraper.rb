@@ -107,7 +107,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   if existing_entry.empty?  # Only insert if the entry doesn't already exist
     # Save data to the database
     db.execute("INSERT INTO westtamar 
-      (council_reference, applicant, description, address, date_received on_notice_to, date_scraped) 
+      (council_reference, applicant, description, address, date_received, on_notice_to, date_scraped) 
       VALUES (?, ?, ?, ?, ?, ?, ?)",
       [council_reference, applicant, description, address, date_received, on_notice_to, date_scraped])
 
