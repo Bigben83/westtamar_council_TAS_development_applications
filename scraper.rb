@@ -73,10 +73,10 @@ doc.css('.edn_article').each_with_index do |item, index|
   description = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.strip.sub('PROPOSAL:', '').strip : 'Description not found'
 
   # Extract the location (from the article summary)
-  location = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'Location not found'
+  address = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('LOCATION:').last.split('CLOSES:').first.strip : 'Location not found'
 
   # Extract the closing date (from the article summary)
-  closing_date = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('CLOSES:').last.strip : 'Closing Date not found'
+  on_notice_to = item.at_css('.edn_articleSummary') ? item.at_css('.edn_articleSummary').text.split('CLOSES:').last.strip : 'Closing Date not found'
 
   # Extract the link to the detailed page
   application_url = item.at_css('.edn_articleTitle a')['href'] if item.at_css('.edn_articleTitle a')
@@ -85,7 +85,7 @@ doc.css('.edn_article').each_with_index do |item, index|
   logger.info("Council Reference: #{council_reference}")
   logger.info("Applicant: #{applicant}")
   logger.info("Description: #{description}")
-  logger.info("Location: #{location}")
+  logger.info("Address: #{address}")
   logger.info("Closing Date: #{closing_date}")
   logger.info("View Details Link: #{application_url}")
   logger.info("-----------------------------------")
@@ -96,9 +96,9 @@ doc.css('.edn_article').each_with_index do |item, index|
   if existing_entry.empty?  # Only insert if the entry doesn't already exist
     # Save data to the database
     db.execute("INSERT INTO westtamar 
-      (council_reference, applicant, description, location, closing_date, date_scraped) 
+      (council_reference, applicant, description, address, on_notice_to, date_scraped) 
       VALUES (?, ?, ?, ?, ?, ?)",
-      [council_reference, applicant, description, location, closing_date, date_scraped])
+      [council_reference, applicant, description, address, on_notice_to, date_scraped])
 
     logger.info("Data for #{council_reference} saved to database.")
   else
